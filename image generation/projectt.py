@@ -9,7 +9,6 @@ import wavio
 import torch
 from torch import autocast
 from diffusers import StableDiffusionPipeline
-from authtoken import auth_token
 import whisper
 from googletrans import Translator
 from gtts import gTTS
@@ -44,8 +43,8 @@ img_display = ctk.CTkLabel(master=app, height=512, width=512, text="")
 img_display.place(x=20, y=130)
 
 modelid = "CompVis/stable-diffusion-v1-4"
-pipe = StableDiffusionPipeline.from_pretrained(modelid, revision="fp16", torch_dtype=torch.float16, use_auth_token=auth_token)
-device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+pipe = StableDiffusionPipeline.from_pretrained(modelid, revision="fp16", torch_dtype=torch.float16)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 pipe.to(device)
 
 last_generated_image = None
@@ -217,4 +216,5 @@ ctk.CTkButton(app, text="Save Image", command=save_img).place(x=350, y=610)
 ctk.CTkButton(app, text="Translate", command=translate_text_input).place(x=200, y=650)
 
 if __name__ == "__main__":
+
   app.mainloop()
